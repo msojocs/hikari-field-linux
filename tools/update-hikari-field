@@ -1,0 +1,44 @@
+#!/bin/bash
+
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+root_dir="$( cd -P "$( dirname "$SOURCE" )"/.. >/dev/null 2>&1 && pwd )"
+
+set -e
+
+notice() {
+    echo -e "\033[36m $1 \033[0m "
+}
+
+download_url="https://store.hikarifield.co.jp/client/download"
+save_name="hikarifield.zip"
+if [[ ! -f "$root_dir/cache/$save_name" ]];then
+    wget -c "$download_url" -O "$root_dir/cache/$save_name.tmp"
+    mv "$root_dir/cache/$save_name.tmp" "$root_dir/cache/$save_name"
+fi
+tmp_dir="$root_dir/tmp"
+mkdir -p "$tmp_dir/hf"
+
+unzip -o -d "$tmp_dir/hf" "$root_dir/cache/$save_name"
+7z x $tmp_dir/hf/HIKARI-FIELD-CLIENT-Setup-*.exe -o"$tmp_dir/hf" "\$PLUGINSDIR/app-64.7z"
+7z x "$tmp_dir/hf/\$PLUGINSDIR/app-64.7z" -o"$tmp_dir/hf" "resources"
+rm -rf "$tmp_dir/hf/\$PLUGINSDIR/app-64.7z" "$tmp_dir/hf/resources/elevate.exe"
+
+cd "$tmp_dir/hf/resources"
+asar e app.asar app
+# !n.app.isPackaged
+sed -i 's#!n.app.isPackaged#n.app.isPackaged#' app/build/main.js
+asar p app app.asar
+# exit 1
+rm -rf "$root_dir/electron/resources/"* "$tmp_dir/hf/resources/app"
+mv "$tmp_dir/hf/resources/"* "$root_dir/electron/resources"
+
+rm -rf "$tmp_dir/hf"
+
+# if [[ -d "$root_dir/electron/resources" ]];then
+#   cd "$root_dir/electron/resources" && ln -s "$root_dir/app/app-update.yml" app-update.yml
+# fi
