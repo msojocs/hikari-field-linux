@@ -8,8 +8,4 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 root_dir="$( cd -P "$( dirname "$SOURCE" )"/.. >/dev/null 2>&1 && pwd )"
 
-# export ELECTRON_IS_DEV=1
-export APPDATA="$HOME/.config/hikari-field-client"
-export USERDATA="$HOME/.config/hikari-field-client"
-export USERPROFILE="$HOME/.config/hikari-field-client"
-$root_dir/electron/electron
+"$root_dir/electron/electron"

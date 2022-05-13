@@ -24,7 +24,7 @@ tmp_dir="$root_dir/tmp"
 mkdir -p "$tmp_dir/hf"
 
 unzip -o -d "$tmp_dir/hf" "$root_dir/cache/$save_name"
-7z x $tmp_dir/hf/HIKARI-FIELD-CLIENT-Setup-*.exe -o"$tmp_dir/hf" "\$PLUGINSDIR/app-64.7z"
+7z x "$tmp_dir/hf/HIKARI-FIELD-CLIENT-Setup-*.exe" -o"$tmp_dir/hf" "\$PLUGINSDIR/app-64.7z"
 7z x "$tmp_dir/hf/\$PLUGINSDIR/app-64.7z" -o"$tmp_dir/hf" "resources"
 rm -rf "$tmp_dir/hf/\$PLUGINSDIR/app-64.7z" "$tmp_dir/hf/resources/elevate.exe"
 
@@ -34,6 +34,7 @@ asar e app.asar app
 sed -i 's#!n.app.isPackaged#n.app.isPackaged#' app/build/main.js
 asar p app app.asar
 # exit 1
+
 rm -rf "$root_dir/electron/resources/"* "$tmp_dir/hf/resources/app"
 mv "$tmp_dir/hf/resources/"* "$root_dir/electron/resources"
 
