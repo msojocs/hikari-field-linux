@@ -30,8 +30,12 @@ rm -rf "$tmp_dir/hf/\$PLUGINSDIR/app-64.7z" "$tmp_dir/hf/resources/elevate.exe"
 
 cd "$tmp_dir/hf/resources"
 asar e app.asar app
+# 处理启动无响应
 # !n.app.isPackaged
 sed -i 's#!n.app.isPackaged#n.app.isPackaged#' app/build/main.js
+# 处理界面在小分辨率下显示不完整的问题
+sed -i 's#idth:1280,#idth:1000,#g' app/build/main.js
+sed -i 's#eight:720#eight:500#g' app/build/main.js
 asar p app app.asar
 # exit 1
 
