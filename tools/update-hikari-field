@@ -14,7 +14,7 @@ notice() {
     echo -e "\033[36m $1 \033[0m "
 }
 
-download_url="https://store.hikarifield.co.jp/client/download"
+download_url="https://client.hikarifield.co.jp/release/HIKARI-FIELD-CLIENT-Setup-1.2.0.zip"
 save_name="hikarifield.zip"
 if [[ ! -f "$root_dir/cache/$save_name" ]];then
     wget -c "$download_url" -O "$root_dir/cache/$save_name.tmp"
@@ -24,21 +24,21 @@ tmp_dir="$root_dir/tmp"
 mkdir -p "$tmp_dir/hf"
 
 unzip -o -d "$tmp_dir/hf" "$root_dir/cache/$save_name"
-7z x "$tmp_dir/hf/HIKARI-FIELD-CLIENT-Setup-*.exe" -o"$tmp_dir/hf" "\$PLUGINSDIR/app-64.7z"
-7z x "$tmp_dir/hf/\$PLUGINSDIR/app-64.7z" -o"$tmp_dir/hf" "resources"
+7z x -y "$tmp_dir/hf/HIKARI-FIELD-CLIENT-Setup-*.exe" -o"$tmp_dir/hf" "\$PLUGINSDIR/app-64.7z"
+7z x -y "$tmp_dir/hf/\$PLUGINSDIR/app-64.7z" -o"$tmp_dir/hf" "resources"
 rm -rf "$tmp_dir/hf/\$PLUGINSDIR/app-64.7z" "$tmp_dir/hf/resources/elevate.exe"
 
 cd "$tmp_dir/hf/resources"
-asar e app.asar app
+# asar e app.asar app
 # 处理启动无响应
-cp "$root_dir/res/scripts/injectMain.js" "app/build/temp.js"
-cat app/build/main.js >> "app/build/temp.js"
-rm -rf "app/build/main.js"
-mv "app/build/temp.js" "app/build/main.js"
+# cp "$root_dir/res/scripts/injectMain.js" "app/build/temp.js"
+# cat app/build/main.js >> "app/build/temp.js"
+# rm -rf "app/build/main.js"
+# mv "app/build/temp.js" "app/build/main.js"
 # 处理界面在小分辨率下显示不完整的问题
 # sed -i 's#idth:1280,#idth:1000,#g' app/build/main.js
 # sed -i 's#eight:720#eight:500#g' app/build/main.js
-asar p app app.asar
+# asar p app app.asar
 # exit 1
 
 mkdir -p "$root_dir/app"
