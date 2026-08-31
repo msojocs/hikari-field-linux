@@ -14,7 +14,7 @@ notice() {
     echo -e "\033[36m $1 \033[0m "
 }
 
-download_url="https://client.hikarifield.co.jp/release/HIKARI-FIELD-CLIENT-Setup-1.2.0.zip"
+download_url="https://static.hikarifield.co.jp/client/HIKARI-FIELD-CLIENT-Setup-1.2.0.zip"
 save_name="hikarifield.zip"
 if [[ ! -f "$root_dir/cache/$save_name" ]];then
     wget -c "$download_url" -O "$root_dir/cache/$save_name.tmp"
